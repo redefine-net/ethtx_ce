@@ -11,6 +11,19 @@
     {%- endif -%}
 {% endmacro %}
 
+{% macro semantics_link(address, label, badge="") %}
+    {%- if address and address != '0x0000000000000000000000000000000000000000' -%}
+        <a href="/semantics/{{ address }}" target="_blank">
+           {%- if badge -%}
+              <span class="badge badge-info">[{{ badge }}] </span>
+           {%- endif -%}
+              {{- label -}}
+        </a>
+    {%- else -%}
+        {{- label -}}
+    {%- endif -%}
+{% endmacro %}
+
 {% macro nft_link(address, label) %}
     {%- if address and address != '0x0000000000000000000000000000000000000000' -%}
         <a href="https://etherscan.io/token/{{ address }}" target="_blank">
@@ -198,6 +211,7 @@
                     <table class="table table-sm">
                         <thead>
                             <tr>
+                                <th scope="col">Name</th>
                                 <th scope="col">Address</th>
                                 <th scope="col">Token</th>
                                 <th scope="col">Balance</th>
@@ -207,7 +221,11 @@
                             {% for balance in balances %}
                                 <tr>
                                     <td rowspan="{{- balance.tokens|length -}}">
-                                        {{- address_link(balance.holder.address, balance.holder.name, balance.holder.badge) -}}
+                                        {{- semantics_link(balance.holder.address, balance.holder.name, balance.holder.badge) -}}
+                                    </td>
+                                    <td >
+                                        {{- address_link(balance.holder.address, balance.holder.address) -}}
+                                        
                                     </td>
                                     {% for token in balance.tokens %}
                                         {% if loop.index > 1 %}<tr>{% endif %}
